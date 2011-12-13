@@ -395,7 +395,7 @@ END { print "1..$n\n$report" }
 	nok { $x = \*x };		# GLOB
 	nok { my $y; $x = \\$y };	# REF
 	 ok { $x = My::Class->new() };	# OBJECT
-	 ok { $x = Der::Class->new() };	# OBJECT
+	nok { $x = Der::Class->new() };	# OBJECT
 }
 
 {

@@ -2,7 +2,7 @@ package Attribute::Types;
 use Attribute::Handlers;
 use Carp;
 
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 sub FETCH { return ${$_[0]->{accessor}->(@_)} }
 sub FETCHSIZE { return @{$_[0]{val}||=[]} }
@@ -120,8 +120,12 @@ sub STORE {
 	my $type = $self->{type};
 	$val = $idx if $self->{accessor} eq \&Attribute::Types::_getscalar;
 	my $value = defined $val ? $val : '<undef>';
-	ref($val) && ref($val)->isa($self->{type})
-		or croak "Cannot assign $value to $type variable" ;
+        my $reftype = ref $val;
+
+	unless (defined $reftype && $reftype eq $self->{type}) {
+		croak "Cannot assign $value to $type variable" ;
+	}
+
 	${$self->{accessor}->(@_)} = $val;
 }
 
